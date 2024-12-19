@@ -134,3 +134,4 @@ document.addEventListener("DOMContentLoaded", function() {
   // Show home content by default when the page loads
   showHome();
 });
+
