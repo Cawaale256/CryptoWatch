@@ -8,13 +8,9 @@
 
 /* Ensure the text in the navbar is bright white */
 .navbar-dark .navbar-nav .nav-link {
-    color: #000080; /* Bright navy color */
+    color: #fff; /* white color */
 }
 
-/* .navbar-dark .navbar-nav .nav-link:hover {
-    color: gold; /* Light grey color on hover */
-}
- */
 
 /* Ensuring the body and html take the full height of the viewport */
 html, body {
