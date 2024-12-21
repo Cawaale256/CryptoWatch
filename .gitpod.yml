@@ -1,6 +1,6 @@
 tasks:
   - init: npm install
-    command: node index.js
+    command: node backend/server.js
 vscode:
   extensions:
     - ms-python.python
