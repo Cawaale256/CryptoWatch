@@ -44,25 +44,6 @@ document.addEventListener("DOMContentLoaded", function() {
   function showHome(event) {
     if (event) event.preventDefault(); // Prevent default anchor behavior
 
-    // Check if the user is signed in
-    const isSignedIn = localStorage.getItem("isSignedIn");
-    if (!isSignedIn) {
-      // Show options to sign in or sign up
-      contentArea.innerHTML = `
-        <h1>Welcome to CryptoWatch</h1>
-        <p>Please choose an option:</p>
-        <button id="goToSignIn" class="btn btn-primary">Sign In</button>
-        <button id="goToSignUp" class="btn btn-secondary">Sign Up</button>
-      `;
-
-      // Add event listeners to the buttons
-      const goToSignInButton = document.getElementById("goToSignIn");
-      const goToSignUpButton = document.getElementById("goToSignUp");
-      if (goToSignInButton) goToSignInButton.addEventListener("click", showSignIn);
-      if (goToSignUpButton) goToSignUpButton.addEventListener("click", showSignUp);
-      return;
-    }
-
     // Clear any existing content
     contentArea.innerHTML = "";
 
@@ -92,20 +73,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       });
     }
-
-    // Perform initial search for Bitcoin
-    performSearch("Bitcoin");
-  }
-
-  // Function to perform a cryptocurrency search
-  async function performSearch(query) {
-    try {
-      const response = await fetch(`/api/crypto?query=${query}`);
-      const data = await response.json();
-      displayCryptoDetails(data);
-    } catch (error) {
-      console.error("Error fetching crypto data:", error);
-    }
   }
 
   // Function to show sign-in form dynamically
@@ -114,27 +81,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Show sign-in modal
     $('#signInModal').modal('show');
-
-    // Add event listener for form submission
-    const signInForm = document.getElementById("signInForm");
-    if (signInForm) {
-      signInForm.addEventListener("submit", handleSignIn);
-    }
-  }
-
-  // Function to handle sign-in form submission
-  function handleSignIn(event) {
-    event.preventDefault(); // Prevent default form submission
-    const email = document.getElementById("signInEmail").value;
-    const password = document.getElementById("signInPassword").value;
-
-    // Perform sign-in logic here (e.g., API call)
-    console.log("Sign In:", email, password);
-
-    // Simulate successful sign-in
-    localStorage.setItem("isSignedIn", true);
-    $('#signInModal').modal('hide');
-    showHome();
   }
 
   // Function to show sign-up form dynamically
@@ -143,26 +89,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Show sign-up modal
     $('#signUpModal').modal('show');
-
-    // Add event listener for form submission
-    const signUpForm = document.getElementById("signUpForm");
-    if (signUpForm) {
-      signUpForm.addEventListener("submit", handleSignUp);
-    }
-  }
-
-  // Function to handle sign-up form submission
-  function handleSignUp(event) {
-    event.preventDefault(); // Prevent default form submission
-    const email = document.getElementById("signUpEmail").value;
-    const password = document.getElementById("signUpPassword").value;
-
-    // Perform sign-up logic here (e.g., API call)
-    console.log("Sign Up:", email, password);
-
-    // Simulate successful sign-up and redirect to sign-in
-    $('#signUpModal').modal('hide');
-    showSignIn();
   }
 
   // Show home content by default when the page loads
