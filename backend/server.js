@@ -7,8 +7,9 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// In-memory store for users (for demonstration purposes)
+// In-memory store for users and sessions (for demonstration purposes)
 const users = {};
+const sessions = {};
 
 // Middleware to parse incoming form data
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,6 +37,7 @@ app.post('/api/signin', (req, res) => {
     const { email, password } = req.body;
     // Perform your authentication logic here
     if (users[email] && users[email].password === password) {
+        sessions[email] = true; // Mark the user as signed in
         res.json({ success: true, message: 'Sign in successful' });
     } else {
         res.status(401).json({ success: false, message: 'Invalid email or password' });
@@ -51,6 +53,17 @@ app.post('/api/signup', (req, res) => {
     } else {
         users[email] = { password };
         res.json({ success: true, message: 'Sign up successful' });
+    }
+});
+
+// Route to handle sign-out
+app.post('/api/signout', (req, res) => {
+    const { email } = req.body;
+    if (sessions[email]) {
+        delete sessions[email]; // Remove the user from the sessions store
+        res.json({ success: true, message: 'Sign out successful' });
+    } else {
+        res.status(400).json({ success: false, message: 'User not signed in' });
     }
 });
 
