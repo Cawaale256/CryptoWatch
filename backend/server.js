@@ -2,13 +2,22 @@ require('dotenv').config();
 const express = require('express');
 const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
+const path = require('path');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.static('../frontend')); // Serve frontend files
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); // Parse incoming JSON data
+// In-memory store for users (for demonstration purposes)
+const users = {};
 
+// Middleware to parse incoming form data
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Serve static files from the frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Route to handle cryptocurrency API request
 app.get('/api/crypto', async (req, res) => {
     const query = req.query.query; // Get the query parameter from the request
     try {
@@ -26,7 +35,7 @@ app.get('/api/crypto', async (req, res) => {
 app.post('/api/signin', (req, res) => {
     const { email, password } = req.body;
     // Perform your authentication logic here
-    if (email === 'user@example.com' && password === 'password123') {
+    if (users[email] && users[email].password === password) {
         res.json({ success: true, message: 'Sign in successful' });
     } else {
         res.status(401).json({ success: false, message: 'Invalid email or password' });
@@ -37,11 +46,11 @@ app.post('/api/signin', (req, res) => {
 app.post('/api/signup', (req, res) => {
     const { email, password } = req.body;
     // Perform your sign-up logic here
-    if (email && password) {
-        // Here, you could store the new user's data in your database
-        res.json({ success: true, message: 'Sign up successful' });
+    if (users[email]) {
+        res.status(400).json({ success: false, message: 'User already exists' });
     } else {
-        res.status(400).json({ success: false, message: 'Please provide both email and password' });
+        users[email] = { password };
+        res.json({ success: true, message: 'Sign up successful' });
     }
 });
 
